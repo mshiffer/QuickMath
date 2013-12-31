@@ -66,13 +66,18 @@ public class AnsweredProblemCollection implements Serializable{
 		return retVal;
 	}
 	
+	/**
+	 * This returns the number that were answered in time AND correct...otherwise, what's the point?
+	 * @param time
+	 * @return
+	 */
 	public int numInTime(double time)
 	{
 		int retVal = 0;
 		
 		for (AnsweredProblem prob : answeredProblems)
 		{
-			if (prob.answerTime() <= time)
+			if (prob.answerTime() <= time && prob.answeredCorrect())
 			{
 				retVal++;
 			}
@@ -83,7 +88,6 @@ public class AnsweredProblemCollection implements Serializable{
 	
 	public double getGrade()
 	{
-		//TODO Fix so no points for wrong answers
 		return (((double)numInTime() + numRight())/(2.0*numProblems())) * 100;
 	}
 	

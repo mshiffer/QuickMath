@@ -46,12 +46,29 @@ public class Teacher {
 		//Get student
 		getStudent();
 
-		choice = promptForChoice();
+		if (isNewStudent())
+		{
+			IOUtils.writeString("OK, " + studentName + ". Let's do a quick baseline test.");
+			IOUtils.writeString("We're going to do addition with 0!");
+			
+			operator = eOperator.addition;
+			targetNumber = 0;
+			
+			lessonType = eLessonType.Baseline;
+			targetTime = BaselineTime;
+			
+			practice();
+		}
+		
+		choice = promptForTopChoice();
 		
 		while (choice != eTopChoice.quit)
 		{
 			if (choice == eTopChoice.practice)
 			{
+				//Choose lesson parameters
+				decideLesson();
+				//practice
 				practice();
 			}
 			else if (choice == eTopChoice.viewStats)
@@ -60,15 +77,16 @@ public class Teacher {
 			}
 			
 			//Do it again
-			choice = promptForChoice();
+			choice = promptForTopChoice();
 		}
 	}
 	
 	private void practice()
 	{
-		//Choose lesson
-		decideLesson();
-
+		//TODO the time should be based on previous work
+		//Create something to keep track of things
+		currentStats = new StatisticsCollector(operator, targetNumber, targetTime);
+		
 		//Prepare lesson
 		List<Problem> problems = ProblemGenerator.GenerateProblems(operator, 0, 9, targetNumber, true);
 
@@ -108,35 +126,15 @@ public class Teacher {
 		loadGradeBook();
 	}
 	
-	//TODO decide Lesson before giving options (i.e. if new student that should override all)
 	public void decideLesson()
 	{
-		if (isNewStudent())
-		{
-			IOUtils.writeString("OK, " + studentName + ". Let's do a quick baseline test.");
-			IOUtils.writeString("We're going to do addition with 0!");
-			
-			operator = eOperator.addition;
-			targetNumber = 0;
-			
-			lessonType = eLessonType.Baseline;
-			targetTime = BaselineTime;
-		}
-		else
-		{
-			IOUtils.writeString("What would you like to work on? +  or  -");
-			String op = IOUtils.getParticularString(new String[] {"+", "-", "x", "/"});
+		IOUtils.writeString("What would you like to work on? +  or  -");
+		String op = IOUtils.getParticularString(new String[] {"+", "-", "x", "/"});
+		operator = eOperator.fromString(op);
 
-			operator = eOperator.fromString(op);
-
-			IOUtils.writeString("Now choose which number you'd like to work with.");
-			targetNumber = IOUtils.getInteger();	
-			targetTime = gradeBook.getTimeForStudent(studentName);
-		}
-		
-		//TODO the time should be based on previous work
-		currentStats = new StatisticsCollector(operator, targetNumber, targetTime);
-		
+		IOUtils.writeString("Now choose which number you'd like to work with.");
+		targetNumber = IOUtils.getInteger();	
+		targetTime = gradeBook.getTimeForStudent(studentName);
 	}
 	
 	public void promptForReady()
@@ -165,7 +163,7 @@ public class Teacher {
 		return response.equals("y");
 	}*/
 	
-	private eTopChoice promptForChoice()
+	private eTopChoice promptForTopChoice()
 	{
 		IOUtils.writeString("What would you like to do?");
 		IOUtils.writeString("1. View Your Statistics");

@@ -1,6 +1,5 @@
 import java.io.Serializable;
 
-//TODO make a class that is just Statistics that consumes a StatisticsCollector
 public class StatisticsCollector implements Serializable {
 	private static final long serialVersionUID = 1L;
 

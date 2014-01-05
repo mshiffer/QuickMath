@@ -5,13 +5,31 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ProblemCollectionDefinition implements Serializable, Comparable<ProblemCollectionDefinition>{
 	private static final long serialVersionUID = 1L;
 
+	//These are used for the purposes of equality
 	public eOperator operator;
 	public int focusNum;
 	
-	public ProblemCollectionDefinition(eOperator op, int num)
+	//These are NOT used for the purposes of equality
+	public int startNum;
+	public int endNum;
+	public double targetTime;
+	
+	public ProblemCollectionDefinition(ProblemCollectionDefinition oldPCD)
+	{
+		this.operator = oldPCD.operator;
+		this.focusNum = oldPCD.focusNum;
+		this.startNum = oldPCD.startNum;
+		this.endNum = oldPCD.endNum;
+		this.targetTime = oldPCD.targetTime;
+	}
+	
+	public ProblemCollectionDefinition(eOperator op, int focusNum, int startNum, int endNum, double targetTime)
 	{
 		this.operator = op;
-		this.focusNum = num;
+		this.focusNum = focusNum;
+		this.startNum = startNum;
+		this.endNum = endNum;
+		this.targetTime = targetTime;
 	}
 	
 	public String toString()

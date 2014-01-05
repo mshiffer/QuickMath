@@ -1,8 +1,6 @@
 import java.io.Serializable;
 import java.util.Hashtable;
 
-
-
 public class GradeBook implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -41,6 +39,42 @@ public class GradeBook implements Serializable {
 	public double getTimeForStudent(String studentName)
 	{
 		return studentStats.get(studentName).getTargetTime();
+	}
+	
+	public double getLastScoreForStudent(String studentName, eOperator operator, int targetNumber)
+	{
+		Statistics stats = studentStats.get(studentName);
+		
+		if (stats == null)
+		{
+			return -1;
+		}
+		
+		AnsweredProblemCollection apc = stats.getLastProblemSet(new ProblemCollectionDefinition(operator, targetNumber, 0, 0, 0));
+		if (apc == null)
+		{
+			return -1;
+		}
+		
+		return apc.getGrade();		
+	}
+	
+	public ProblemCollectionDefinition getLastPCDforStudent(String studentName, eOperator operator, int targetNumber)
+	{
+		Statistics stats = studentStats.get(studentName);
+		
+		if (stats == null)
+		{
+			return null;
+		}
+		
+		AnsweredProblemCollection apc = stats.getLastProblemSet(new ProblemCollectionDefinition(operator, targetNumber, 0, 0, 0));
+		if (apc == null)
+		{
+			return null;
+		}
+		
+		return apc.collectionDefinition();
 	}
 		
 }

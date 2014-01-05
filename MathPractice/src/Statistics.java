@@ -2,7 +2,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-
 public class Statistics implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +40,29 @@ public class Statistics implements Serializable {
 	public double getTargetTime()
 	{
 		return targetTime;
+	}
+	
+	public double getLastScore(ProblemCollectionDefinition probDef)
+	{
+		LinkedList<AnsweredProblemCollection> list = problemSets.get(probDef);
+		
+		if (list.size() > 0)
+		{
+			return list.getLast().getGrade();
+		}
+		
+		return 100;
+	}
+	
+	public AnsweredProblemCollection getLastProblemSet(ProblemCollectionDefinition pcd)
+	{
+		LinkedList<AnsweredProblemCollection> list = problemSets.get(pcd);
+		if (list == null)
+		{
+			return null;
+		}
+		
+		return list.getLast();
 	}
 	
 	public HashMap<ProblemCollectionDefinition, LinkedList<AnsweredProblemCollection>> getProblemSets()

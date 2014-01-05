@@ -9,6 +9,8 @@ public class Teacher {
 	
 	private eOperator operator;
 	private int targetNumber;
+	//private int lowerNumber;
+	//private int upperNumber;
 	
 	private StatisticsCollector currentStats;	
 	public static final double BaselineTime = 3.5;
@@ -57,7 +59,9 @@ public class Teacher {
 			lessonType = eLessonType.Baseline;
 			targetTime = BaselineTime;
 			
-			practice();
+			ProblemCollectionDefinition pcd = new ProblemCollectionDefinition(operator, targetNumber, 0, 9, targetTime);
+			
+			practice(pcd);
 		}
 		
 		choice = promptForTopChoice();
@@ -67,9 +71,9 @@ public class Teacher {
 			if (choice == eTopChoice.practice)
 			{
 				//Choose lesson parameters
-				decideLesson();
+				ProblemCollectionDefinition pcd = decideLesson();
 				//practice
-				practice();
+				practice(pcd);
 			}
 			else if (choice == eTopChoice.viewStats)
 			{
@@ -81,14 +85,14 @@ public class Teacher {
 		}
 	}
 	
-	private void practice()
-	{
-		//TODO the time should be based on previous work
+
+	private void practice(ProblemCollectionDefinition pcd)
+	{		
 		//Create something to keep track of things
-		currentStats = new StatisticsCollector(operator, targetNumber, targetTime);
+		currentStats = new StatisticsCollector(pcd);
 		
 		//Prepare lesson
-		List<Problem> problems = ProblemGenerator.GenerateProblems(operator, 0, 9, targetNumber, true);
+		List<Problem> problems = ProblemGenerator.GenerateProblems(pcd.operator, pcd.startNum, pcd.endNum, pcd.focusNum, true);
 
 		//Present lesson
 		ProblemPresenter presenter = new ProblemPresenter(problems, currentStats);
@@ -126,7 +130,7 @@ public class Teacher {
 		loadGradeBook();
 	}
 	
-	public void decideLesson()
+	public ProblemCollectionDefinition decideLesson()
 	{
 		IOUtils.writeString("What would you like to work on? +  or  -");
 		String op = IOUtils.getParticularString(new String[] {"+", "-", "x", "/"});
@@ -135,6 +139,21 @@ public class Teacher {
 		IOUtils.writeString("Now choose which number you'd like to work with.");
 		targetNumber = IOUtils.getInteger();	
 		targetTime = gradeBook.getTimeForStudent(studentName);
+		
+		//find out what the student did last time 
+		ProblemCollectionDefinition oldPCD = gradeBook.getLastPCDforStudent(studentName, operator, targetNumber);
+		double oldScore = gradeBook.getLastScoreForStudent(studentName, operator, targetNumber);
+		
+		//figure out the parameters this time
+		ProblemCollectionDefinition newPCD = calcNewPCD(oldPCD, oldScore);
+		
+		//If there was no oldPCD for this setup
+		if (newPCD == null)
+		{
+			newPCD = new ProblemCollectionDefinition(operator, targetNumber, 0, 9, BaselineTime);
+		}
+
+		return newPCD;
 	}
 	
 	public void promptForReady()
@@ -184,6 +203,7 @@ public class Teacher {
 		return eTopChoice.quit;
 	}
 	
+	//TODO Do the right thing when they answer no.
 	private boolean isNewStudent()
 	{
 		if (!gradeBook.containsStudent(studentName))
@@ -197,6 +217,36 @@ public class Teacher {
 		}
 		
 		return false;
+	}
+	
+	private ProblemCollectionDefinition calcNewPCD(ProblemCollectionDefinition oldPCD, double score)
+	{
+		ProblemCollectionDefinition newPCD;
+		
+		if (oldPCD == null)
+		{
+			return null;
+		}
+			
+		newPCD = new ProblemCollectionDefinition(oldPCD);
+		
+		//If the score is greater than 85, add a new number to the list
+		if (score >= 85)
+		{
+			if (newPCD.endNum < 9)
+			{
+				newPCD.endNum++;
+			}
+		}
+		else
+		{
+			if (newPCD.endNum > 0)
+			{
+				newPCD.endNum--;
+			}
+		}
+		
+		return newPCD;
 	}
 	
 	public static void main(String[] args)

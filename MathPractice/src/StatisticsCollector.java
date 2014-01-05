@@ -3,14 +3,14 @@ import java.io.Serializable;
 public class StatisticsCollector implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	double timeLimit = 0;
+	double targetTime = 0;
 	
 	private AnsweredProblemCollection answeredProblems;
 		
-	public StatisticsCollector(eOperator op, int focusNum, double timeLimit)
+	public StatisticsCollector(ProblemCollectionDefinition pcd)
 	{
-		this.answeredProblems = new AnsweredProblemCollection(op, focusNum, timeLimit);		
-		this.timeLimit = timeLimit;
+		this.answeredProblems = new AnsweredProblemCollection(pcd);		
+		this.targetTime = pcd.targetTime;
 	}
 	
 	public void addStat(Problem problem, ProblemStat stat)
@@ -35,7 +35,7 @@ public class StatisticsCollector implements Serializable {
 	
 	public void displayDesiredTime()
 	{
-		IOUtils.writeString("Time you're looking for is: " + timeLimit);		
+		IOUtils.writeString("Time you're looking for is: " + targetTime);		
 	}
 	
 	public void displayAllProblems()
@@ -55,7 +55,7 @@ public class StatisticsCollector implements Serializable {
 				s = prob.toString() + " " + prob.answer + " | " + "You got it right!" + '\t';
 			}
 			s += " | " + "Your time: " + IOUtils.fd(prob.responseTime);
-			if (!prob.answeredInTime(this.timeLimit))
+			if (!prob.answeredInTime(this.targetTime))
 			{
 				s += " (That was too slow.)";
 			}
@@ -65,7 +65,7 @@ public class StatisticsCollector implements Serializable {
 	
 	public void setTimeLimit(double limit)
 	{
-		timeLimit = limit;
+		targetTime = limit;
 	}
 	
 	public AnsweredProblemCollection getAnsweredProblemCollection()

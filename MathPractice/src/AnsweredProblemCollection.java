@@ -13,16 +13,14 @@ public class AnsweredProblemCollection implements Serializable{
 	
 	private int numRight = -1;
 	private double averageTime = -1;
-	private double targetTime = Double.MAX_VALUE;
 	
 	private Date date = new Date(System.currentTimeMillis());
 	
 	private boolean cacheStale = true;
 	
-	public AnsweredProblemCollection(eOperator operator, int focusNum, double targetTime)
+	public AnsweredProblemCollection(ProblemCollectionDefinition pcd)
 	{
-		this.collectionDefinition = new ProblemCollectionDefinition(operator, focusNum);
-		this.targetTime = targetTime;
+		this.collectionDefinition = pcd;
 	}
 	
 	public ProblemCollectionDefinition collectionDefinition()
@@ -57,7 +55,7 @@ public class AnsweredProblemCollection implements Serializable{
 		
 		for (AnsweredProblem prob : answeredProblems)
 		{
-			if (prob.answerTime() <= this.targetTime)
+			if (prob.answerTime() <= collectionDefinition.targetTime && prob.answeredCorrect())
 			{
 				retVal++;
 			}
@@ -107,7 +105,7 @@ public class AnsweredProblemCollection implements Serializable{
 	
 	public double targetTime()
 	{
-		return targetTime;
+		return collectionDefinition.targetTime;
 	}
 	
 	private void recalcStats()

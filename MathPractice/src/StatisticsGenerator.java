@@ -8,7 +8,7 @@ import java.util.Set;
 public class StatisticsGenerator {
 	public static String displayHighLevelStats(Statistics stats)
 	{
-		String s = "";
+		String s = "Your best scores:\n";
 		
 		HashMap<ProblemCollectionDefinition, LinkedList<AnsweredProblemCollection>> probSets = stats.getProblemSets();
 		

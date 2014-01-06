@@ -102,4 +102,15 @@ public class IOUtils {
 		return String.format("%.1f", d);
 	}
 	
+	public static void clearScreen()
+	{
+		try {
+			Runtime.getRuntime().exec("cls");
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
+	
 }

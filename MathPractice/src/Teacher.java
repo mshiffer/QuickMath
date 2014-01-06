@@ -117,6 +117,7 @@ public class Teacher {
 	
 	private void viewStats()
 	{
+		//promptForStatsChoice();
 		Statistics stats = gradeBook.getStatsForStudent(studentName);
 		String s = StatisticsGenerator.displayHighLevelStats(stats);
 		IOUtils.writeString(s);

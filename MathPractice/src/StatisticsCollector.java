@@ -25,7 +25,7 @@ public class StatisticsCollector implements Serializable {
 	
 	public double calculateGrade()
 	{
-		double numInTime = this.answeredProblems.numInTime();
+		double numInTime = this.answeredProblems.numInTime(true);
 		double numRight = this.answeredProblems.numRight();
 		
 		double numProbs = this.answeredProblems.numProblems() * 2;

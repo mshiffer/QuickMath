@@ -49,9 +49,9 @@ public class AnsweredProblemCollection implements Serializable{
 		return numRight;
 	}
 	
-	public int numInTime()
+	public int numInTime(boolean creditForLongNumbers)
 	{
-		int retVal = 0;
+		/*int retVal = 0;
 		
 		for (AnsweredProblem prob : answeredProblems)
 		{
@@ -59,9 +59,14 @@ public class AnsweredProblemCollection implements Serializable{
 			{
 				retVal++;
 			}
+			else if (creditForLongNumbers && prob.answer > 9 && prob.answerTime() <= (collectionDefinition.targetTime + 1) && prob.answeredCorrect())
+			{
+				retVal++;
+			}
 		}
 		
-		return retVal;
+		return retVal;*/
+		return numInTime(collectionDefinition.targetTime, creditForLongNumbers);
 	}
 	
 	/**
@@ -69,13 +74,17 @@ public class AnsweredProblemCollection implements Serializable{
 	 * @param time
 	 * @return
 	 */
-	public int numInTime(double time)
+	public int numInTime(double time, boolean creditForLongNumbers)
 	{
 		int retVal = 0;
 		
 		for (AnsweredProblem prob : answeredProblems)
 		{
 			if (prob.answerTime() <= time && prob.answeredCorrect())
+			{
+				retVal++;
+			}
+			else if (creditForLongNumbers && prob.answer > 9 && time <= (collectionDefinition.targetTime + 1) && prob.answeredCorrect())
 			{
 				retVal++;
 			}
@@ -86,7 +95,7 @@ public class AnsweredProblemCollection implements Serializable{
 	
 	public double getGrade()
 	{
-		return (((double)numInTime() + numRight())/(2.0*numProblems())) * 100;
+		return (((double)numInTime(true) + numRight())/(2.0*numProblems())) * 100;
 	}
 	
 	public int numProblems()

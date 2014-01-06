@@ -165,7 +165,7 @@ public class Teacher {
 	
 	public void giveFeedback()
 	{
-		double grade = 100*currentStats.calculateGrade();
+		double grade = currentStats.getGrade();
 		double avgTime = currentStats.calculateAverageTime();
 		
 		IOUtils.writeString(studentName + ", your grade is: " + grade);

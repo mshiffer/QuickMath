@@ -23,14 +23,9 @@ public class StatisticsCollector implements Serializable {
 		return this.answeredProblems.averageTime();
 	}
 	
-	public double calculateGrade()
+	public double getGrade()
 	{
-		double numInTime = this.answeredProblems.numInTime(true);
-		double numRight = this.answeredProblems.numRight();
-		
-		double numProbs = this.answeredProblems.numProblems() * 2;
-		
-		return (numInTime + numRight)/numProbs;
+		return this.answeredProblems.getGrade();
 	}
 	
 	public void displayDesiredTime()

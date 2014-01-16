@@ -1,3 +1,4 @@
+package com.mshiffer;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -37,6 +38,8 @@ public class ProblemCollectionDefinition implements Serializable, Comparable<Pro
 		String retVal = "";
 		
 		retVal += operator + " " + focusNum;
+		
+		//retVal += " " + startNum + " " + endNum + " " + targetTime;
 		
 		return retVal;
 	}

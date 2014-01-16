@@ -1,3 +1,4 @@
+package com.mshiffer;
 import java.io.Serializable;
 import java.util.Hashtable;
 

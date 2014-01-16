@@ -7,14 +7,16 @@ public class Problem implements Serializable{
 
 	protected int leftNum;
 	protected int rightNum;
-	protected eOperator operator;
+	protected eOperator eoperator;
+	protected String operator;
 	protected int answer;
 	
 	public Problem (Problem pOld)
 	{
 		leftNum = pOld.leftNum;
 		rightNum = pOld.rightNum;
-		operator = pOld.operator;
+		eoperator = pOld.eoperator;
+		operator = eoperator.toString();
 		answer = pOld.answer;
 	}
 	
@@ -22,14 +24,14 @@ public class Problem implements Serializable{
 	{
 		this.leftNum = leftNum;
 		this.rightNum = rightNum;
-		this.operator = operator;
-		
+		this.eoperator = operator;
+		this.operator = eoperator.toString();
 		calcAndSetAnswer();
 	}
 
 	private void calcAndSetAnswer()
 	{
-		switch (operator)
+		switch (eoperator)
 		{
 			case addition:
 				answer = leftNum + rightNum;
@@ -50,7 +52,7 @@ public class Problem implements Serializable{
 	public String toString()
 	{
 		String probString = "";
-		probString += this.leftNum + " " + this.operator.toString() + " " + this.rightNum + " =";
+		probString += this.leftNum + " " + this.eoperator.toString() + " " + this.rightNum + " =";
 		
 		return probString;
 	}

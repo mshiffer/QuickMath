@@ -22,10 +22,18 @@ public class IOUtils {
 		
 		return retVal;
 	}
+
+	public static void blankLn(int n)
+	{
+		for (int i=0; i<n; i++)
+		{
+			System.out.println();
+		}
+	}
 	
 	public static void blankLn()
 	{
-		System.out.println("");
+		System.out.println();
 	}
 	
 	public static String getParticularString(String[] valArray)

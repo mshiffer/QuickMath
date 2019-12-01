@@ -1,7 +1,7 @@
 package com.mshiffer;
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+//import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ProblemCollectionDefinition implements Serializable, Comparable<ProblemCollectionDefinition>{
 	private static final long serialVersionUID = 1L;
@@ -65,10 +65,11 @@ public class ProblemCollectionDefinition implements Serializable, Comparable<Pro
 	@Override
 	public int hashCode() 
 	{
-		return new HashCodeBuilder(17, 37).
+		/*return new HashCodeBuilder(17, 37).
 				append(operator).
 				append(focusNum).
-				toHashCode();
+				toHashCode();*/
+		return 1;
 	}
 
 	@Override

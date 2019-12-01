@@ -4,7 +4,7 @@ import java.io.Serializable;
 public class StatisticsCollector implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	double targetTime = 0;
+	private double targetTime = 0;
 	
 	private AnsweredProblemCollection answeredProblems;
 		
@@ -19,7 +19,7 @@ public class StatisticsCollector implements Serializable {
 		this.answeredProblems.addAnsweredProblem(problem, stat);
 	}
 	
-	public double calculateAverageTime()
+	public double getAverageTime()
 	{
 		return this.answeredProblems.averageTime();
 	}
@@ -44,11 +44,11 @@ public class StatisticsCollector implements Serializable {
 			String s;
 			if (!prob.answeredCorrect())
 			{
-				s = prob.toString() + " " + prob.answer + " | " + "Your answer: " + prob.response + '\t';
+				s = prob.toString() + " | Correct answer: " + prob.answer + " | " + "Your answer: " + prob.response + "\t\t";
 			}
 			else
 			{
-				s = prob.toString() + " " + prob.answer + " | " + "You got it right!" + '\t';
+				s = prob.toString() + " | Correct answer: " + prob.answer + " | " + "You got it right!" + '\t';
 			}
 			s += " | " + "Your time: " + IOUtils.fd(prob.responseTime);
 			if (!prob.answeredInTime(this.targetTime))
@@ -68,6 +68,5 @@ public class StatisticsCollector implements Serializable {
 	{
 		return this.answeredProblems;
 	}
-	
-	
+
 }

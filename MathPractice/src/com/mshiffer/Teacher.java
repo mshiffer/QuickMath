@@ -14,7 +14,7 @@ public class Teacher {
 	//private int upperNumber;
 	
 	private StatisticsCollector currentStats;	
-	public static final double BaselineTime = 3.5;
+	private static final double BaselineTime = 3.5;
 	
 	private double targetTime = 0;
 	
@@ -47,21 +47,21 @@ public class Teacher {
 		loadGradeBook();
 
 		//Get student
-		getStudent();
+		boolean newStudent = getStudent();
 
-		if (isNewStudent())
+		if (newStudent)
 		{
 			IOUtils.writeString("OK, " + studentName + ". Let's do a quick baseline test.");
 			IOUtils.writeString("We're going to do addition with 0!");
-			
+
 			operator = eOperator.addition;
 			targetNumber = 0;
-			
+
 			lessonType = eLessonType.Baseline;
 			targetTime = BaselineTime;
-			
+
 			ProblemCollectionDefinition pcd = new ProblemCollectionDefinition(operator, targetNumber, 0, 9, targetTime);
-			
+
 			practice(pcd);
 		}
 		
@@ -109,7 +109,7 @@ public class Teacher {
 		gradeBook.recordStatsForStudent(studentName, currentStats);
 		if (lessonType == eLessonType.Baseline)
 		{
-			gradeBook.setTimeForStudent(studentName, currentStats.calculateAverageTime()+1);
+			gradeBook.setTimeForStudent(studentName, currentStats.getAverageTime()+1);
 		}
 		
 		//Save grade book to file
@@ -123,13 +123,29 @@ public class Teacher {
 		String s = StatisticsGenerator.displayHighLevelStats(stats);
 		IOUtils.writeString(s);
 	}
-	
-	public void getStudent()
+
+	/* returns true if it's a new student */
+	public boolean getStudent()
 	{
-		IOUtils.writeString("Please enter your name.");
-		studentName = IOUtils.getString();
-		
-		loadGradeBook();
+		while (true)
+		{
+			IOUtils.writeString("Please enter your name.");
+			studentName = IOUtils.getString();
+
+			if (!gradeBook.containsStudent(studentName))
+			{
+				IOUtils.writeString("I didn't find you.  Are you new?  y/n");
+				String ans = IOUtils.getParticularString(new String[]{"y", "n"});
+				if (ans.equals("y"))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 	
 	public ProblemCollectionDefinition decideLesson()
@@ -167,14 +183,18 @@ public class Teacher {
 	public void giveFeedback()
 	{
 		double grade = currentStats.getGrade();
-		double avgTime = currentStats.calculateAverageTime();
-		
-		IOUtils.writeString(studentName + ", your grade is: " + grade);
+		double avgTime = currentStats.getAverageTime();
+
+		IOUtils.blankLn(2);
+		IOUtils.writeString(studentName + ", your grade is: " + grade + "%");
 		IOUtils.blankLn();
-		IOUtils.writeString("Your average time was: " + IOUtils.fd(avgTime));
+		IOUtils.writeString("Your average time was: " + IOUtils.fd(avgTime) + "s");
 		IOUtils.blankLn();
-		
 		currentStats.displayAllProblems();
+		IOUtils.blankLn();
+		IOUtils.writeString("You scored " + Math.round(currentStats.getGrade()) + "%");
+		IOUtils.blankLn();
+
 	}
 	
 	/*private boolean promptToContinue()
@@ -205,8 +225,7 @@ public class Teacher {
 		return eTopChoice.quit;
 	}
 	
-	//TODO Do the right thing when they answer no.
-	private boolean isNewStudent()
+	/*private boolean isNewStudent()
 	{
 		if (!gradeBook.containsStudent(studentName))
 		{
@@ -219,7 +238,7 @@ public class Teacher {
 		}
 		
 		return false;
-	}
+	}*/
 	
 	private ProblemCollectionDefinition calcNewPCD(ProblemCollectionDefinition oldPCD, double score)
 	{

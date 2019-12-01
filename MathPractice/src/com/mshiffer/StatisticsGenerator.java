@@ -13,9 +13,9 @@ public class StatisticsGenerator {
 	 * 0 is the best score if that hasn't been done
 	 * @param stats
 	 */
-	public static HashMap<ProblemCollectionDefinition, Double> calcBestScoresFull(Statistics stats)
+	public static HashMap<ProblemCollectionDefinition, ArrayList<Double>> calcBestScoresFull(Statistics stats)
 	{		
-		HashMap<ProblemCollectionDefinition, Double> topScores = new HashMap<ProblemCollectionDefinition, Double>();
+		HashMap<ProblemCollectionDefinition, ArrayList<Double>> topScores = new HashMap<ProblemCollectionDefinition, ArrayList<Double>>();
 
 		Set<ProblemCollectionDefinition> keySet = new HashSet<ProblemCollectionDefinition>();
 		
@@ -34,20 +34,26 @@ public class StatisticsGenerator {
 		{
 			ProblemCollectionDefinition pcd = def;
 			double bestScore = 0;
+			double bestAvgTime = 100;
+
 			List<AnsweredProblemCollection> probs = stats.getProblemSets().get(def);
 			if (probs != null)
 			{
 				for (AnsweredProblemCollection probSet : probs)
 				{
-					if (probSet.collectionDefinition().endNum == 9 && bestScore < probSet.getGrade())
+					if (probSet.collectionDefinition().endNum == 9 && bestScore <= probSet.getGrade() && bestAvgTime > probSet.averageTime())
 					{
 						bestScore = probSet.getGrade();
+						bestAvgTime = probSet.averageTime();
 						pcd = probSet.collectionDefinition();
 					}
 				}
 			}
-			
-			topScores.put(pcd, bestScore);
+
+			ArrayList<Double> bestStuff = new ArrayList<Double>();
+			bestStuff.add(0, bestScore);
+			bestStuff.add(1, bestAvgTime);
+			topScores.put(pcd, bestStuff);
 		}
 		
 		return topScores;
@@ -85,11 +91,8 @@ public class StatisticsGenerator {
 	{
 		String s = "Your best scores:\n";
 		
-		//HashMap<ProblemCollectionDefinition, LinkedList<AnsweredProblemCollection>> probSets = stats.getProblemSets();
-		
-		HashMap<ProblemCollectionDefinition, Double> topScores = calcBestScoresFull(stats);
-		/*= new HashMap<ProblemCollectionDefinition, Double>();*/
-		
+		HashMap<ProblemCollectionDefinition, ArrayList<Double>> topScores = calcBestScoresFull(stats);
+
 		Set<ProblemCollectionDefinition> keySet = topScores.keySet();
 		
 		ArrayList<ProblemCollectionDefinition> keyList = new ArrayList<ProblemCollectionDefinition>(keySet);
@@ -97,10 +100,12 @@ public class StatisticsGenerator {
 		
 		for (ProblemCollectionDefinition def : keyList)
 		{
-			Double bestScore = topScores.get(def);
+			Double bestScore = topScores.get(def).get(0);
+			Double bestTime = topScores.get(def).get(1);
+
 			if (bestScore != 0.0)
 			{
-				s += def + " " + bestScore;	
+				s += def + "  |  " + Math.round(bestScore) + "%  |  " + String.format("%.2f", bestTime) + "s  |  ";
 
 				if (bestScore == 100.0)
 				{

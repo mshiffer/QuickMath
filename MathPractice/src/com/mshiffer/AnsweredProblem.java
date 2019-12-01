@@ -33,7 +33,7 @@ public class AnsweredProblem extends Problem {
 	//TODO Make this work for what we want to output
 	public String toString()
 	{
-		return super.toString() + " Answered in " + responseTime;
+		return super.toString() + " Answered in " + String.format("%.2f", responseTime) + "s";
 	}
 
 }

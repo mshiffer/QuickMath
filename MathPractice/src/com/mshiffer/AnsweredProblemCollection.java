@@ -96,7 +96,9 @@ public class AnsweredProblemCollection implements Serializable{
 	
 	public double getGrade()
 	{
-		return (((double)numInTime(true) + numRight())/(2.0*numProblems())) * 100;
+		//return (((double)numInTime(true) + numRight())/(2.0*numProblems())) * 100;
+		//Now we want it out of 10 problems always
+		return (((double)numInTime(true) + numRight())/(2.0*10)) * 100;
 	}
 	
 	public int numProblems()
